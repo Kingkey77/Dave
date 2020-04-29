@@ -411,6 +411,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.x
       value: -14
       objectReference: {fileID: 0}
+    - target: {fileID: 7168140937731900982, guid: b8f858230a13a5e4f909afb754a0571f,
+        type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 688fe5b5c1f687246b6ba239133e05ef, type: 3}
+    - target: {fileID: 7168140937731900982, guid: b8f858230a13a5e4f909afb754a0571f,
+        type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7168140937731900982, guid: b8f858230a13a5e4f909afb754a0571f,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.504
+      objectReference: {fileID: 0}
     - target: {fileID: 8099863921646961527, guid: b8f858230a13a5e4f909afb754a0571f,
         type: 3}
       propertyPath: m_Name

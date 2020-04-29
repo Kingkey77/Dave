@@ -5,25 +5,32 @@ using UnityEngine;
 
 public class Dave : MonoBehaviour
 {
-    Rigidbody rigidbody;
+    private Rigidbody rb;
+    private AudioSource davesAudioSource;
+    bool fartPlay;
+    bool playToggle;
+    
     // Start is called before the first frame update
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
+        davesAudioSource = GetComponent<AudioSource>();
+        fartPlay = true;
+        playToggle = true;
     }
 
     // Update is called once per frame
     void Update()
     {
         ProcessInput();
-
     }
 
     private void ProcessInput()
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            rigidbody.AddRelativeForce(Vector3.up);
+            rb.AddRelativeForce(Vector3.up);
+            PlayClip();
         }
         else if (Input.GetKey(KeyCode.A)||Input.GetKey(KeyCode.D))
         {
@@ -33,13 +40,32 @@ public class Dave : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.A))
             {
-                print("Rotate Left");
+                transform.Rotate(Vector3.forward);
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                print("Rotate Right");
-            }
-            
+                transform.Rotate(-Vector3.forward);
+            }            
         }
+    }
+
+    private void PlayClip()
+    {
+        //Check to see if you just set the toggle to positive
+        if (fartPlay == true && playToggle == true)
+        {
+            //Play the audio you attach to the AudioSource component
+            davesAudioSource.Play();
+            //Ensure audio doesn’t play more than once
+            playToggle = false;
+        }
+        //Check if you just set the toggle to false
+        //if (m_Play == false && m_ToggleChange == true)
+        //{
+            //Stop the audio
+            //m_MyAudioSource.Stop();
+            //Ensure audio doesn’t play more than once
+            //m_ToggleChange = false;
+        //}
     }
 }
