@@ -7,30 +7,32 @@ public class Dave : MonoBehaviour
 {
     private Rigidbody rb;
     private AudioSource davesAudioSource;
-    bool fartPlay;
-    bool playToggle;
+    bool playDaveClip;
+    bool isPlaying;
     
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         davesAudioSource = GetComponent<AudioSource>();
-        fartPlay = true;
-        playToggle = true;
+        //fartPlay = true;
+        //playToggle = true;
     }
 
     // Update is called once per frame
     void Update()
     {
         ProcessInput();
+        PlayClip();
     }
 
     private void ProcessInput()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             rb.AddRelativeForce(Vector3.up);
-            PlayClip();
+            //PlayClip();
+            playDaveClip = true;
         }
         else if (Input.GetKey(KeyCode.A)||Input.GetKey(KeyCode.D))
         {
@@ -52,12 +54,12 @@ public class Dave : MonoBehaviour
     private void PlayClip()
     {
         //Check to see if you just set the toggle to positive
-        if (fartPlay == true && playToggle == true)
+        if ( playDaveClip == true )
         {
             //Play the audio you attach to the AudioSource component
             davesAudioSource.Play();
             //Ensure audio doesn’t play more than once
-            playToggle = false;
+             //= false;
         }
         //Check if you just set the toggle to false
         //if (m_Play == false && m_ToggleChange == true)
