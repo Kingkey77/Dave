@@ -9,6 +9,7 @@ public class Dave : MonoBehaviour
     private AudioSource davesAudioSource;
     bool playDaveClip;
     bool isPlaying;
+    public float thrustMultiplier; 
     
     // Start is called before the first frame update
     void Start()
@@ -22,21 +23,19 @@ public class Dave : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ProcessInput();
-        PlayClip();
+        Rotation();
+        Thrust();
+
     }
 
-    private void ProcessInput()
+    private void Rotation()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        rb.freezeRotation = true;
+
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         {
-            rb.AddRelativeForce(Vector3.up);
-            //PlayClip();
-            playDaveClip = true;
-        }
-        else if (Input.GetKey(KeyCode.A)||Input.GetKey(KeyCode.D))
-        {
-            if (Input.GetKey(KeyCode.A)&& Input.GetKey(KeyCode.D))
+            
+            if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
             {
                 print("Nope");
             }
@@ -47,27 +46,27 @@ public class Dave : MonoBehaviour
             else if (Input.GetKey(KeyCode.D))
             {
                 transform.Rotate(-Vector3.forward);
-            }            
+            }
         }
+       
+        rb.freezeRotation = false;
+        
     }
 
-    private void PlayClip()
+    private void Thrust()
     {
-        //Check to see if you just set the toggle to positive
-        if ( playDaveClip == true )
+
+        if (Input.GetKey(KeyCode.Space))
         {
-            //Play the audio you attach to the AudioSource component
-            davesAudioSource.Play();
-            //Ensure audio doesn’t play more than once
-             //= false;
+            rb.AddRelativeForce(Vector3.up * thrustMultiplier);
+            if (!davesAudioSource.isPlaying)
+            {
+                davesAudioSource.Play();
+            }
         }
-        //Check if you just set the toggle to false
-        //if (m_Play == false && m_ToggleChange == true)
-        //{
-            //Stop the audio
-            //m_MyAudioSource.Stop();
-            //Ensure audio doesn’t play more than once
-            //m_ToggleChange = false;
-        //}
+        else
+        {
+            davesAudioSource.Stop();
+        }
     }
 }
