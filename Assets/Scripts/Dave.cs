@@ -6,16 +6,17 @@ using UnityEngine;
 public class Dave : MonoBehaviour
 {
     private Rigidbody rb;
-    private AudioSource davesAudioSource;
-    bool playDaveClip;
+    private AudioSource audioSource;
+    bool audioClip;
     bool isPlaying;
-    public float thrustMultiplier; 
-    
+    [SerializeField]float thrustMultiplier = 1000f;
+    [SerializeField]float rcsThrust = 10f;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        davesAudioSource = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
         //fartPlay = true;
         //playToggle = true;
     }
@@ -23,34 +24,12 @@ public class Dave : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Rotation();
         Thrust();
-
+        Rotation();
     }
-
-    private void Rotation()
+    protected void LateUpdate()         //Added to stop wierd rotations in x and y
     {
-        rb.freezeRotation = true;
-
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-        {
-            
-            if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
-            {
-                print("Nope");
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                transform.Rotate(Vector3.forward);
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                transform.Rotate(-Vector3.forward);
-            }
-        }
-       
-        rb.freezeRotation = false;
-        
+        transform.localEulerAngles = new Vector3(0, 0, transform.localEulerAngles.z);
     }
 
     private void Thrust()
@@ -58,15 +37,54 @@ public class Dave : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space))
         {
-            rb.AddRelativeForce(Vector3.up * thrustMultiplier);
-            if (!davesAudioSource.isPlaying)
+            float thrustThisFrame;
+            thrustThisFrame = thrustMultiplier * Time.deltaTime;
+            rb.AddRelativeForce(Vector3.up * thrustThisFrame);
+            if (!audioSource.isPlaying)
             {
-                davesAudioSource.Play();
+                audioSource.Play();
             }
         }
         else
         {
-            davesAudioSource.Stop();
+            audioSource.Stop();
         }
+    }
+
+    private void Rotation()
+    {
+        
+        float rotationThisFrame = rcsThrust * Time.deltaTime;
+        rb.freezeRotation = true;       //take maunal control of rotation 
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        {            
+            if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
+            {
+                print("Nope");
+            }
+            else if (Input.GetKey(KeyCode.A))
+            {
+                transform.Rotate(Vector3.forward * rotationThisFrame);
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                transform.Rotate(-Vector3.forward * rotationThisFrame);
+            }
+        }       
+        rb.freezeRotation = false;      //resume physics conrol of rigidbody  
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        switch (collision.gameObject.tag)
+        {
+            case "Friendly":
+                print("OK");
+                break;
+            default:
+                print("dead");
+                break;
+        }
+                
     }
 }
