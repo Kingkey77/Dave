@@ -3736,7 +3736,7 @@ PrefabInstance:
     - target: {fileID: 3995503356958295999, guid: 324408de7aaf7c449a1e57df042c3de4,
         type: 3}
       propertyPath: m_TagString
-      value: Friendly
+      value: Finish
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 324408de7aaf7c449a1e57df042c3de4, type: 3}
@@ -5242,6 +5242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thrustMultiplier: 1000
   rcsThrust: 150
+  daveThrustSound: {fileID: 8300000, guid: 688fe5b5c1f687246b6ba239133e05ef, type: 3}
 --- !u!54 &2053929586
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5623,7 +5624,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 02cd88427c50648408fe9ad25da55046, type: 2}
+      objectReference: {fileID: 2100000, guid: 13bed670ff802d34c9241924d34c7869, type: 2}
     - target: {fileID: 3995503356958295999, guid: 324408de7aaf7c449a1e57df042c3de4,
         type: 3}
       propertyPath: m_Name
