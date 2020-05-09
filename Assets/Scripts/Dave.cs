@@ -5,7 +5,15 @@ public class Dave : MonoBehaviour
 {
     [SerializeField] float thrustMultiplier = 1000f;
     [SerializeField] float rcsThrust = 10f;
+
     [SerializeField] AudioClip daveThrustSound;
+    [SerializeField] AudioClip daveOuch;
+    [SerializeField] AudioClip levelCompleteChime;
+    [SerializeField] AudioClip daveOhNo;
+
+    [SerializeField] ParticleSystem daveThrustParticles;
+    [SerializeField] ParticleSystem daveSuccessParticles;
+    [SerializeField] ParticleSystem daveExplodesParticles;
 
     private Rigidbody rb;
     private AudioSource audioSource;
@@ -28,7 +36,7 @@ public class Dave : MonoBehaviour
     {
         if (state == State.Alive)
         {
-            Thrust();
+            RespondToThrustInput ();
             Rotation();
         }
     }
@@ -37,23 +45,29 @@ public class Dave : MonoBehaviour
         transform.localEulerAngles = new Vector3(0, 0, transform.localEulerAngles.z);
     }
 
-    private void Thrust()
+    private void RespondToThrustInput()
     {
             if (Input.GetKey(KeyCode.Space))
-            {
-                float thrustThisFrame;
-                thrustThisFrame = thrustMultiplier * Time.deltaTime;
-                rb.AddRelativeForce(Vector3.up * thrustThisFrame);
-                if (!audioSource.isPlaying)
-                {
-                    audioSource.PlayOneShot(daveThrustSound);
-                }
-            }
-            else
+        {
+            ApplyThrust();
+        }
+        else
             {
                 audioSource.Stop();
+                daveThrustParticles.Stop();
             }
         
+    }
+
+    private void ApplyThrust()
+    {
+        float thrustThisFrame = thrustMultiplier * Time.deltaTime;
+        rb.AddRelativeForce(Vector3.up * thrustThisFrame);
+        daveThrustParticles.Play();
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(daveThrustSound);
+        }
     }
 
     private void Rotation()
@@ -88,19 +102,42 @@ public class Dave : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case "Friendly":
-                // Do Nothing
+
+                StartBumpSequence();
                 break;
             case "Finish":
-                state = State.Transcending;
-                Invoke("LoadNextLevel", 1f);        //Parameterise this time
+                StartSuccessSequence();
                 break;
             default:
-                state = State.Dying;
-                Invoke("LoadFirstLevel", 1f);
-               
+                StartDeathSequence();                
                 break;
         }
                 
+    }
+
+    private void StartBumpSequence()
+    {
+        audioSource.Stop();
+        audioSource.PlayOneShot(daveOuch);
+    }
+
+    private void StartDeathSequence()
+    {
+        state = State.Dying;
+        daveExplodesParticles.Play();
+        if (audioSource.isPlaying)
+        { audioSource.Stop(); }
+        audioSource.PlayOneShot(daveOhNo);
+        Invoke("LoadFirstLevel", 1f);
+    }
+
+    private void StartSuccessSequence()
+    {
+        state = State.Transcending;
+        audioSource.Stop();
+        audioSource.PlayOneShot(levelCompleteChime);
+        daveSuccessParticles.Play();
+        Invoke("LoadNextLevel", 1f);        //Parameterise this time
     }
 
     private void LoadFirstLevel()
